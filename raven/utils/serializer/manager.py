@@ -6,7 +6,6 @@ raven.utils.serializer.manager
 :license: BSD, see LICENSE for more details.
 """
 import logging
-from contextlib import closing
 
 __all__ = ('register', 'transform')
 
@@ -85,5 +84,8 @@ register = manager.register
 
 
 def transform(value, manager=manager, **kwargs):
-    with closing(Serializer(manager)) as serializer:
+    serializer = Serializer(manager)
+    try:
         return serializer.transform(value, **kwargs)
+    finally:
+        serializer.close()
