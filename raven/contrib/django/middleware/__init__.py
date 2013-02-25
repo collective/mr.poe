@@ -6,7 +6,6 @@ raven.contrib.django.middleware
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
 
 from django.conf import settings
 from raven.contrib.django.models import client

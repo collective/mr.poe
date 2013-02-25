@@ -6,7 +6,6 @@ raven.contrib.django.handlers
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
 
 import logging
 from raven.handlers.logging import SentryHandler as BaseSentryHandler

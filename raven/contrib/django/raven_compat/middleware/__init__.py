@@ -6,6 +6,5 @@ raven.contrib.django.raven_compat.middleware
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
 
 from raven.contrib.django.middleware import *  # NOQA

@@ -8,7 +8,6 @@ Acts as an implicit hook for Django installs.
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
 
 from hashlib import md5
 import logging
