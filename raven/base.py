@@ -9,7 +9,10 @@ raven.base
 
 import base64
 import datetime
-import hashlib
+try:
+    from md5 import md5
+except ImportError:
+    from hashlib import md5
 import logging
 import os
 import sys
@@ -341,7 +344,7 @@ class Client(object):
             checksum_bits = data['checksum']
 
         if isinstance(checksum_bits, (list, tuple)):
-            checksum = hashlib.md5()
+            checksum = md5()
             for bit in checksum_bits:
                 checksum.update(to_string(bit))
             checksum = checksum.hexdigest()

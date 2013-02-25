@@ -9,7 +9,10 @@ Acts as an implicit hook for Django installs.
 """
 
 
-from hashlib import md5
+try:
+    from md5 import md5
+except ImportError:
+    from hashlib import md5
 import logging
 import sys
 import warnings
