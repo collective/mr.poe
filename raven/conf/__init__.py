@@ -7,7 +7,7 @@ raven.conf
 """
 
 import logging
-from raven.utils.urlparse import urlparse
+from raven.utils.url_parse import urlparse
 
 __all__ = ('load', 'setup_logging')
 

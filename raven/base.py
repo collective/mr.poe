@@ -28,7 +28,7 @@ from raven.utils import json, get_versions, get_auth_header
 from raven.utils.encoding import to_string
 from raven.utils.serializer import transform
 from raven.utils.stacks import get_stack_info, iter_stack_frames, get_culprit
-from raven.utils.urlparse import urlparse
+from raven.utils.url_parse import urlparse
 from raven.transport.registry import TransportRegistry, default_transports
 
 __all__ = ('Client',)
