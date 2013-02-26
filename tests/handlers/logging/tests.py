@@ -2,7 +2,7 @@ import logging
 import sys
 from unittest2 import TestCase
 from raven.base import Client
-from raven.handlers.logging import SentryHandler
+from raven.handlers.logging_handler import SentryHandler
 from raven.utils.stacks import iter_stack_frames
 
 
@@ -101,7 +101,7 @@ class LoggingIntegrationTest(TestCase):
         frames = event['sentry.interfaces.Stacktrace']['frames']
         self.assertNotEquals(len(frames), 1)
         frame = frames[0]
-        self.assertEquals(frame['module'], 'raven.handlers.logging')
+        self.assertEquals(frame['module'], 'raven.handlers.logging_handler')
         self.assertFalse('sentry.interfaces.Exception' in event)
         self.assertTrue('sentry.interfaces.Message' in event)
         self.assertEquals(event['culprit'], 'root in make_record')

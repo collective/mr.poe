@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from inspect import getouterframes, currentframe, getinnerframes
-from raven.handlers.logging import SentryHandler
+from raven.handlers.logging_handler import SentryHandler
 from ZConfig.components.logger.factory import Factory
 import logging
 

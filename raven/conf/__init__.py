@@ -64,7 +64,7 @@ def setup_logging(handler, exclude=EXCLUDE_LOGGER_DEFAULTS):
 
     For a typical Python install:
 
-    >>> from raven.handlers.logging import SentryHandler
+    >>> from raven.handlers.logging_handler import SentryHandler
     >>> client = Sentry(...)
     >>> setup_logging(SentryHandler(client))
 

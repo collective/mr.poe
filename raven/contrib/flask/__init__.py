@@ -14,7 +14,7 @@ from flask.signals import got_request_exception
 from raven.conf import setup_logging
 from raven.base import Client
 from raven.contrib.flask.utils import get_data_from_request
-from raven.handlers.logging import SentryHandler
+from raven.handlers.logging_handler import SentryHandler
 
 
 def make_client(client_cls, app, dsn=None):

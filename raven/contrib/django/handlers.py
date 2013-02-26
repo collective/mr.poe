@@ -8,7 +8,7 @@ raven.contrib.django.handlers
 
 
 import logging
-from raven.handlers.logging import SentryHandler as BaseSentryHandler
+from raven.handlers.logging_handler import SentryHandler as BaseSentryHandler
 
 
 class SentryHandler(BaseSentryHandler):
