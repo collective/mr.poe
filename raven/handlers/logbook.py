@@ -13,7 +13,7 @@ import traceback
 
 from raven.base import Client
 from raven.utils.encoding import to_string
-
+from raven.utils import all
 
 class SentryHandler(logbook.Handler):
     def __init__(self, *args, **kwargs):

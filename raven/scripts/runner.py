@@ -15,7 +15,7 @@ from optparse import OptionParser
 
 from raven import Client
 from raven.utils.json import json
-
+from raven.utils import all
 
 def store_json(option, opt_str, value, parser):
     try:

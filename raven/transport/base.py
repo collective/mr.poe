@@ -10,6 +10,8 @@ import logging
 import sys
 import urllib2
 
+from raven.utils import all
+
 try:
     # Google App Engine blacklists parts of the socket module, this will prevent
     # it from blowing up.

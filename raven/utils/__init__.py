@@ -116,3 +116,7 @@ def get_auth_header(protocol, timestamp, client, api_key, api_secret=None, **kwa
         header.append(('sentry_secret', api_secret))
 
     return 'Sentry %s' % ', '.join('%s=%s' % (k, v) for k, v in header)
+
+def all(*args):
+    args = map(bool, args)
+    return not (False in args)
