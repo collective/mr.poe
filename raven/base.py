@@ -40,11 +40,11 @@ Raven = None
 
 
 class ModuleProxyCache(dict):
-    def __missing__(self, key):
+    def missing(self, key):
         module, class_name = key.rsplit('.', 1)
 
         handler = getattr(__import__(module, {},
-                {}, [class_name], -1), class_name)
+                {}, [class_name]), class_name)
 
         self[key] = handler
 
@@ -196,7 +196,7 @@ class Client(object):
 
     def get_processors(self):
         for processor in self.processors:
-            yield self.module_cache[processor](self)
+            yield self.module_cache.missing(processor)(self)
 
     def get_module_versions(self):
         if not self.include_versions:
@@ -213,7 +213,7 @@ class Client(object):
         return '$'.join(result)
 
     def get_handler(self, name):
-        return self.module_cache[name](self)
+        return self.module_cache.missing(name)(self)
 
     def _get_public_dsn(self):
         url = urlparse(self.servers[0])
