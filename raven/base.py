@@ -494,11 +494,10 @@ class Client(object):
             if isinstance(e, urllib2.HTTPError):
                 body = e.read()
                 self.error_logger.error('Unable to reach Sentry log server: %s (url: %%s, body: %%s)' % (e,), url, body,
-                    exc_info=True, extra={'data': {'body': body, 'remote_url': url}})
+                    exc_info=True)
             else:
                 tmpl = 'Unable to reach Sentry log server: %s (url: %%s)'
-                self.error_logger.error(tmpl % (e,), url, exc_info=True,
-                        extra={'data': {'remote_url': url}})
+                self.error_logger.error(tmpl % (e,), url, exc_info=True)
 
             message = self._get_log_message(data)
             self.error_logger.error('Failed to submit message: %r', message)
