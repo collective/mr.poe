@@ -6,6 +6,8 @@ import re
 from raven.handlers.logging_handler import SentryHandler
 from ZConfig.components.logger.factory import Factory
 import logging
+import sys
+import traceback
 
 from raven.utils.stacks import iter_stack_frames
 
@@ -105,10 +107,28 @@ class ZopeSentryHandler(SentryHandler):
             error_type = [line for line in CRITICAL_LINE.findall(record.msg) if 'Traceback' not in line]
             if error_type:
                 error_type = error_type[0]
-                #new_msg = record.msg.spiltlines()
-                #old_first_line = new_msg[0]
                 new_msg = record.msg.replace(error_number, error_type)
-                #new_msg = "\n".join([new_first_line] + new_msg[1:])
-                record.msg = new_msg
-                #record.message = new_msg
+                record.message = record.msg = new_msg
+        try:
+            e=sys.exc_info()
+            if e[0]:
+                exception_info = {"type":e[0].__name__, 
+                    "value":str(e[1]), "module":e[0].__module__}
+                setattr(record, 'sentry.interfaces.Exception', exception_info)
+                if error_number:
+                    # This is covered by the rest of our metadata
+                    new_msg = "%(type)s: %(value)s" % (exception_info)
+                    record.msg = new_msg
+                    record.message = new_msg
+            if e[2]:
+                tb_info = {"frames": [
+                            {"filename":a[0],
+                             "lineno":a[1],
+                             "function":a[2],
+                             "context_line":a[3],
+                             } for a in traceback.extract_tb(e[2])]}
+                setattr(record, 'sentry.interfaces.Stacktrace', tb_info)
+        except (AttributeError, KeyError, TypeError):
+            pass
+        
         return super(ZopeSentryHandler, self).emit(record)
