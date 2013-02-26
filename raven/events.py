@@ -49,8 +49,8 @@ class Exception(BaseEvent):
         exc = data['sentry.interfaces.Exception']
         output = [exc['type']]
         for frame in data['sentry.interfaces.Stacktrace']['frames']:
-            output.append(frame['module'])
-            output.append(frame.get('context_line', frame['function']))
+            output.append(frame.get('module', None))
+            output.append(frame.get('context_line', frame.get('function', None)))
         return output
 
     def capture(self, exc_info=None, **kwargs):
