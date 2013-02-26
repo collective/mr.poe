@@ -67,7 +67,7 @@ class ZopeSentryHandler(SentryHandler):
                     request.stdin.seek(body_pos)
                     http = dict(headers=request.environ,
                                 url=request.getURL(),
-                                method=request.method,
+                                method=request.get('REQUEST_METHOD', ''),
                                 host=request.environ.get('REMOTE_ADDR',
                                 ''), data=body)
                     if 'HTTP_USER_AGENT' in http['headers']:
@@ -87,5 +87,6 @@ class ZopeSentryHandler(SentryHandler):
                         user_dict = {'is_authenticated': False}
                     setattr(record, 'sentry.interfaces.User', user_dict)
                 except (AttributeError, KeyError):
-                    logger.warning('Could not extract data from request', exc_info=True)
+                    # We don't want to go recursive
+                    pass
         return super(ZopeSentryHandler, self).emit(record)
