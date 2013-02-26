@@ -134,13 +134,14 @@ class UDPTransport(BaseUDPTransport):
     def _send_data(self, data, addr):
         udp_socket = None
         try:
-            udp_socket = socket(AF_INET, SOCK_DGRAM)
-            udp_socket.setblocking(False)
-            udp_socket.sendto(data, addr)
-        except socket_error:
-            # as far as I understand things this simply can't happen,
-            # but still, it can't hurt
-            pass
+            try:
+                udp_socket = socket(AF_INET, SOCK_DGRAM)
+                udp_socket.setblocking(False)
+                udp_socket.sendto(data, addr)
+            except socket_error:
+                # as far as I understand things this simply can't happen,
+                # but still, it can't hurt
+                pass
         finally:
             # Always close up the socket when we're done
             if udp_socket is not None:
