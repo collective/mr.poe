@@ -20,6 +20,42 @@ from raven.utils import all
 RESERVED = ('stack', 'name', 'module', 'funcName', 'args', 'msg', 'levelno', 'exc_text', 'exc_info', 'data', 'created', 'levelname', 'msecs', 'relativeCreated', 'tags')
 
 
+
+def makeRecord(self, name, level, fn, lno, msg, args, exc_info, func=None, extra=None):
+    """
+    A factory method which can be overridden in subclasses to create
+    specialized LogRecords.
+    """
+    rv = logging.LogRecord(name, level, fn, lno, msg, args, exc_info)
+    rv.funcName = func
+    #if extra is not None:
+    #    for key in extra:
+    #        if (key in ["message", "asctime"]) or (key in rv.__dict__):
+    #            raise KeyError("Attempt to overwrite %r in LogRecord" % key)
+    #        rv.__dict__[key] = extra[key]
+    return rv
+
+def _log(self, level, msg, args, exc_info=None, extra=None):
+    """
+    Low-level logging routine which creates a LogRecord and then calls
+    all the handlers of this logger to handle the record.
+    """
+    try:
+        fn, lno, func = self.findCaller()
+    except ValueError:
+        fn, lno, func = "(unknown file)", 0, "(unknown function)"
+    if exc_info:
+        if not isinstance(exc_info, tuple):
+            exc_info = sys.exc_info()
+    record = self.makeRecord(self.name, level, fn, lno, msg, args, exc_info)
+    record.funcName = func
+    self.handle(record)
+
+
+logging.Logger._log = _log
+logging.Logger.makeRecord = makeRecord
+
+
 class SentryHandler(logging.Handler, object):
     def __init__(self, *args, **kwargs):
         client = kwargs.get('client_cls', Client)
@@ -139,8 +175,8 @@ class SentryHandler(logging.Handler, object):
             handler_kwargs = {'exc_info': record.exc_info}
 
         # HACK: discover a culprit when we normally couldn't
-        elif not (data.get('sentry.interfaces.Stacktrace') or data.get('culprit')) and (record.name):
-            culprit = label_from_frame({'module': record.name, 'function': ""})
+        elif not (data.get('sentry.interfaces.Stacktrace') or data.get('culprit')) and (record.name or record.funcName):
+            culprit = label_from_frame({'module': record.name, 'function': record.funcName})
             if culprit:
                 data['culprit'] = culprit
 
