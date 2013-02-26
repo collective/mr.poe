@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from inspect import getouterframes, currentframe, getinnerframes
+import re
 from raven.handlers.logging_handler import SentryHandler
 from ZConfig.components.logger.factory import Factory
 import logging
@@ -10,6 +11,8 @@ from raven.utils.stacks import iter_stack_frames
 
 logger = logging.getLogger(__name__)
 
+SITE_ERROR_NO = re.compile("^((\d)+\.(\d)+\.(\d)+) ")
+CRITICAL_LINE = re.compile("\n(.+?:.*?)\n")
 
 class ZopeSentryHandlerFactory(Factory):
 
@@ -82,11 +85,30 @@ class ZopeSentryHandler(SentryHandler):
                     if user is not None:
                         user_dict = dict(id=user.getId(),
                                          is_authenticated=user.has_role('Authenticated'),
-                                         email=user.getProperty('email') or '')
+                                         email=user.getProperty('email') or '',
+                                         roles=getattr(request, 'roles', ()))
                     else:
-                        user_dict = {'is_authenticated': False}
+                        user_dict = {'is_authenticated': False, 'roles': getattr(request, 'roles', ())}
                     setattr(record, 'sentry.interfaces.User', user_dict)
                 except (AttributeError, KeyError):
                     # We don't want to go recursive
                     pass
+        
+        error_number = SITE_ERROR_NO.findall(record.msg)
+        if error_number:
+            error_number = error_number[0][0]
+        else:
+            error_number = None
+        
+        if error_number:
+            setattr(record, 'zope.errorid', error_number)
+            error_type = [line for line in CRITICAL_LINE.findall(record.msg) if 'Traceback' not in line]
+            if error_type:
+                error_type = error_type[0]
+                #new_msg = record.msg.spiltlines()
+                #old_first_line = new_msg[0]
+                new_msg = record.msg.replace(error_number, error_type)
+                #new_msg = "\n".join([new_first_line] + new_msg[1:])
+                record.msg = new_msg
+                #record.message = new_msg
         return super(ZopeSentryHandler, self).emit(record)
