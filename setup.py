@@ -1,14 +1,4 @@
 #!/usr/bin/env python
-"""
-Raven
-======
-
-Raven is a Python client for `Sentry <http://getsentry.com/>`_. It provides
-full out-of-the-box support for many of the popular frameworks, including
-`Django <djangoproject.com>`_, `Flask <http://flask.pocoo.org/>`_, and `Pylons
-<http://www.pylonsproject.org/>`_. Raven also includes drop-in support for any
-`WSGI <http://wsgi.readthedocs.org/>`_-compatible web application.
-"""
 
 # Hack to prevent stupid "TypeError: 'NoneType' object is not callable" error
 # in multiprocessing/util.py _exit_function when running `python
@@ -47,13 +37,13 @@ tests_require = [
 
 
 setup(
-    name='raven',
-    version='3.1.16-py24.3',
+    name='mr.poe',
+    version='3.1.16-3',
     author='David Cramer',
     author_email='dcramer@gmail.com',
-    url='http://github.com/getsentry/raven-python',
-    description='Raven is a client for Sentry (https://www.getsentry.com)',
-    long_description=__doc__,
+    url='http://github.com/collective/mr.poe',
+    description='mr.poe is a fork of raven-python for ancient versions of Python',
+    long_description=open('README.rst', 'rb').read(),
     packages=find_packages(exclude=("tests",)),
     zip_safe=False,
     extras_require={
