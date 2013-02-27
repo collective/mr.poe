@@ -74,6 +74,8 @@ setup(
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         'Operating System :: OS Independent',
-        'Topic :: Software Development'
+        'Topic :: Software Development',
+        'Programming Language :: Python :: 2.4',
+        'Framework :: Zope2',
     ],
 )
