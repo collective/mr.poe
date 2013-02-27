@@ -121,13 +121,28 @@ class ZopeSentryHandler(SentryHandler):
                     record.msg = new_msg
                     record.message = new_msg
             if e[2]:
-                tb_info = {"frames": [
-                            {"filename":a[0],
-                             "lineno":a[1],
-                             "function":a[2],
-                             "context_line":a[3],
-                             } for a in traceback.extract_tb(e[2])]}
+                tb_info = {"frames": []}
+                frames = traceback.extract_tb(e[2])
+                for frame in frames:
+                    try:
+                        # I am an evil thing
+                        tb_module_guess = [m for m in sys.modules.keys() if m.replace(".","/") in frame[0]]
+                        # Longest guessed module name
+                        tb_module_guess = sorted(tb_module_guess, key=lambda x:len(x))[-1]
+                    except:
+                        tb_module_guess = None
+                    tb_info["frames"].append(
+                            {"filename":frame[0],
+                             "lineno":frame[1],
+                             "function":frame[2],
+                             "context_line":frame[3],
+                             "module":tb_module_guess,
+                             })
                 setattr(record, 'sentry.interfaces.Stacktrace', tb_info)
+                lowest_frame = tb_info['frames'][-1]
+                if "/" not in lowest_frame['filename']:
+                    culprit = "%s %s" % (lowest_frame['filename'], lowest_frame['function'])
+                    setattr(record, 'culprit', culprit)
         except (AttributeError, KeyError, TypeError):
             pass
         
