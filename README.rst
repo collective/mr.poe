@@ -1,8 +1,5 @@
 Raven
-======
-
-.. image:: https://secure.travis-ci.org/getsentry/raven-python.png?branch=master
-   :target: http://travis-ci.org/getsentry/raven-python
+=====
 
 Raven is a Python client for `Sentry <http://www.getsentry.com/>`_. It provides
 full out-of-the-box support for many of the popular frameworks, including
@@ -12,7 +9,14 @@ web application.
 Your application doesn't live on the web? No problem! Raven is easy to use in
 any Python application.
 
-**Raven 1.0 requires at least version 2.0 of Sentry to be installed on the server**
+**Note**: This is a branch of Raven that supports Python2.4. Not all of the
+contrib modules are fully convered, but the Zope one has been modified to give
+useful messages for the Zope 2.10 era.
+
+Todo
+----
+
+This package will be renamed to mr.poe for the next release, to avoid confusion.
 
 Resources
 ---------
